@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<ol id="elem">
+    <li>Привет</li>
+    <li>Мир</li>
+</ol>
+
+<div class="alert">
+    <strong>Всем привет!</strong> Вы прочитали важное сообщение.
+</div>
+
+<div id="container"></div>
+
+<ul>
+    <li>Животные
+        <ul>
+            <li>Млекопитающие
+                <ul>
+                    <li>Коровы</li>
+                    <li>Ослы</li>
+                    <li>Собаки</li>
+                    <li>Тигры</li>
+                </ul>
+            </li>
+            <li>Другие
+                <ul>
+                    <li>Змеи</li>
+                    <li>Птицы</li>
+                    <li>Ящерицы</li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li>Рыбы
+        <ul>
+            <li>Аквариумные
+                <ul>
+                    <li>Гуппи</li>
+                    <li>Скалярии</li>
+                </ul>
+            </li>
+            <li>Морские
+                <ul>
+                    <li>Морская форель</li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+</ul>
+
+
+
+<div id="calendar"></div>
+
+<style>
+    .alert {
+        padding: 15px;
+        border: 1px solid #d6e9c6;
+        border-radius: 4px;
+        color: #3c763d;
+        background-color: #dff0d8;
+    }
+</style>
+
+<script>
+    let div = document.createElement('div')
+    div.className = "alert"
+    div.innerHTML = "<strong>Всем привет!</strong> Вы прочитали важное сообщение."
+    document.body.append(div)
+
+    function clear(elem) {
+        elem.innerHTML = ''
+    }
+    clear(elem)
+
+    let ul = document.createElement('ul')
+    document.body.append(ul)
+    while (true) {
+        let data = prompt("Введите текст для элемента списка", "")
+        if (!data) {
+            break
+        }
+        let li = document.createElement('li')
+        li.textContent = data
+        ul.append(li)
+    }
+
+
+    let data = {
+        "Рыбы": {
+            "форель": {},
+            "лосось": {}
+        },
+
+        "Деревья": {
+            "Огромные": {
+                "секвойя": {},
+                "дуб": {}
+            },
+            "Цветковые": {
+                "яблоня": {},
+                "магнолия": {}
+            }
+        }
+    }
+    function createTree(container, obj) {
+        container.innerHTML = createTreeText(obj)
+    }
+    function createTreeText(obj) {
+        let li = ''
+        let ul
+        for (let key in obj) {
+            li += '<li>' + key + createTreeText(obj[key]) + '</li>'
+        }
+        if (li) {
+            ul = '<ul>' + li + '</ul>'
+        }
+        return ul || ''
+    }
+    createTree(container, data)
+
+
+
+    let lis = document.getElementsByTagName('li')
+    for (let li of lis) {
+        let descendantsCount = li.getElementsByTagName('li').length
+        if (!descendantsCount) continue
+        li.firstChild.data += ' [' + descendantsCount + ']'
+    }
+
+</script>
+
+<script>
+    function createCalendar(elem, year, month) {
+        let mon = month - 1
+        let d = new Date(year, mon)
+        let table = '<table><tr><th>пн</th><th>вт</th><th>ср</th><th>чт</th><th>пт</th><th>сб</th><th>вс</th></tr><tr>'
+        for (let i = 0; i < getDay(d); i++) {
+            table += '<td></td>'
+        }
+        while (d.getMonth() == mon) {
+            table += '<td>' + d.getDate() + '</td>'
+            if (getDay(d) % 7 == 6) {
+                table += '</tr><tr>'
+            }
+            d.setDate(d.getDate() + 1)
+        }
+        if (getDay(d) != 0) {
+            for (let i = getDay(d); i < 7; i++) {
+                table += '<td></td>'
+            }
+        }
+        table += '</tr></table>'
+        elem.innerHTML = table
+    }
+    function getDay(date) {
+        let day = date.getDay()
+        if (day == 0) day = 7
+        return day - 1
+    }
+    createCalendar(calendar, 2022, 6)
+</script>
+
+
+ <div id="clock">
+    <span class="hour">hh</span>:<span class="min">mm</span>:<span class="sec">ss</span>
+</div>
+<input type="button" onclick="clockStart()" value="Start">
+<input type="button" onclick="clockStop()" value="Stop">
+
+<style>
+    .hour {
+        color: red
+    }
+
+    .min {
+        color: green
+    }
+
+    .sec {
+        color: blue
+    }
+</style>
+<script>
+    let timerId;
+
+    function update() {
+        let clock = document.getElementById('clock')
+        let date = new Date()
+        let hours = date.getHours()
+        if (hours < 10) hours = '0' + hours
+        clock.children[0].innerHTML = hours
+        let minutes = date.getMinutes()
+        if (minutes < 10) minutes = '0' + minutes
+        clock.children[1].innerHTML = minutes
+        let seconds = date.getSeconds()
+        if (seconds < 10) seconds = '0' + seconds
+        clock.children[2].innerHTML = seconds
+    }
+
+    function clockStart() {
+        if (!timerId) {
+            timerId = setInterval(update, 1000)
+        }
+        update()
+    }
+    function clockStop() {
+        clearInterval(timerId)
+        timerId = null
+    }
+</script>
+
+
+<ul id="ul">
+    <li id="one">1</li>
+    <li id="two">4</li>
+</ul>
+<script>
+    one.insertAdjacentHTML('afterend', '<li>2</li><li>3</li>')
+</script>
+
+
+<table>
+    <thead>
+    <tr>
+        <th>Name</th><th>Surname</th><th>Age</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>John</td><td>Smith</td><td>10</td>
+    </tr>
+    <tr>
+        <td>Pete</td><td>Brown</td><td>15</td>
+    </tr>
+    <tr>
+        <td>Ann</td><td>Lee</td><td>5</td>
+    </tr>
+    <tr>
+        <td>...</td><td>...</td><td>...</td>
+    </tr>
+    </tbody>
+</table>
+<script>
+    let sortedRows = Array.from(table.rows)
+        .slice(1)
+        .sort((rowA, rowB) => rowA.cells[0].innerHTML > rowB.cells[0].innerHTML ? 1 : -1)
+    table.tBodies[0].append(...sortedRows)
+</script>
+
+
+
+</body>
+</html>
